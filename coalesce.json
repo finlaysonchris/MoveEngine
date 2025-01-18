@@ -1,0 +1,16 @@
+{
+  "webProject": {
+    "projectFile": "./MoveEngine.Web/MoveEngine.Web.csproj"
+  },
+  "dataProject": {
+    "projectFile": "./MoveEngine.Data/MoveEngine.Data.csproj"
+  },
+
+  "rootGenerator": "Vue",
+
+  "generatorConfig": {
+    "Scripts": {
+      "targetDirectory": "../src"
+    }
+  }
+}
