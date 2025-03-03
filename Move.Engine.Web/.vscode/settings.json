@@ -1,6 +1,7 @@
 {
-  "typescript.tsdk": "Move.Engine.Web\\node_modules\\typescript\\lib",
-  "dotnet.defaultSolution": "Move.Engine.sln",
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "dotnet.defaultSolution": "../Move.Engine.sln",
+  "dotnet.automaticallyCreateSolutionInWorkspace": false,
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"

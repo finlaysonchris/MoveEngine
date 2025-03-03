@@ -6,7 +6,7 @@
 
     <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
 
-    <CoalesceVersion>5.3.0</CoalesceVersion> 
+    <CoalesceVersion>5.3.3</CoalesceVersion> 
 
   </PropertyGroup>
 </Project>

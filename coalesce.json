@@ -1,9 +1,9 @@
 {
   "webProject": {
-    "projectFile": "./MoveEngine.Web/MoveEngine.Web.csproj"
+    "projectFile": "./Move.Engine.Web/Move.Engine.Web.csproj"
   },
   "dataProject": {
-    "projectFile": "./MoveEngine.Data/MoveEngine.Data.csproj"
+    "projectFile": "./Move.Engine.Data/Move.Engine.Data.csproj"
   },
 
   "rootGenerator": "Vue",
