@@ -2,7 +2,8 @@
   <div class="home">
     <!-- Component is auto-imported by `unplugin-vue-components`
     (either kebab-case or PascalCase works.) -->
-    <HelloWorld msg="Welcome to your new Vue.js Coalesce application!" />
+
+    Select your equipment.
   </div>
 </template>
 

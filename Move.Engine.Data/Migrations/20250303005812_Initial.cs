@@ -26,14 +26,13 @@ namespace Move.Engine.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Widgets",
+                name: "Equpment",
                 columns: table => new
                 {
-                    WidgetId = table.Column<int>(type: "int", nullable: false)
+                    EquipmentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Category = table.Column<int>(type: "int", nullable: false),
-                    InventedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    Icon = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ModifiedById = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ModifiedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     CreatedById = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -41,7 +40,7 @@ namespace Move.Engine.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Widgets", x => x.WidgetId);
+                    table.PrimaryKey("PK_Equpment", x => x.EquipmentId);
                 });
         }
 
@@ -52,7 +51,7 @@ namespace Move.Engine.Data.Migrations
                 name: "DataProtectionKeys");
 
             migrationBuilder.DropTable(
-                name: "Widgets");
+                name: "Equpment");
         }
     }
 }

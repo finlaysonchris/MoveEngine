@@ -3,28 +3,27 @@ import * as $models from './models.g'
 import * as $apiClients from './api-clients.g'
 import { ViewModel, ListViewModel, ViewModelCollection, ServiceViewModel, type DeepPartial, defineProps } from 'coalesce-vue/lib/viewmodel'
 
-export interface WidgetViewModel extends $models.Widget {
-  widgetId: number | null;
+export interface EquipmentViewModel extends $models.Equipment {
+  equipmentId: number | null;
   name: string | null;
-  category: $models.WidgetCategory | null;
-  inventedOn: Date | null;
+  icon: string | null;
   modifiedById: string | null;
   modifiedOn: Date | null;
   createdById: string | null;
   createdOn: Date | null;
 }
-export class WidgetViewModel extends ViewModel<$models.Widget, $apiClients.WidgetApiClient, number> implements $models.Widget  {
+export class EquipmentViewModel extends ViewModel<$models.Equipment, $apiClients.EquipmentApiClient, number> implements $models.Equipment  {
   
-  constructor(initialData?: DeepPartial<$models.Widget> | null) {
-    super($metadata.Widget, new $apiClients.WidgetApiClient(), initialData)
+  constructor(initialData?: DeepPartial<$models.Equipment> | null) {
+    super($metadata.Equipment, new $apiClients.EquipmentApiClient(), initialData)
   }
 }
-defineProps(WidgetViewModel, $metadata.Widget)
+defineProps(EquipmentViewModel, $metadata.Equipment)
 
-export class WidgetListViewModel extends ListViewModel<$models.Widget, $apiClients.WidgetApiClient, WidgetViewModel> {
+export class EquipmentListViewModel extends ListViewModel<$models.Equipment, $apiClients.EquipmentApiClient, EquipmentViewModel> {
   
   constructor() {
-    super($metadata.Widget, new $apiClients.WidgetApiClient())
+    super($metadata.Equipment, new $apiClients.EquipmentApiClient())
   }
 }
 
@@ -49,10 +48,10 @@ export class SecurityServiceViewModel extends ServiceViewModel<typeof $metadata.
 
 
 const viewModelTypeLookup = ViewModel.typeLookup = {
-  Widget: WidgetViewModel,
+  Equipment: EquipmentViewModel,
 }
 const listViewModelTypeLookup = ListViewModel.typeLookup = {
-  Widget: WidgetListViewModel,
+  Equipment: EquipmentListViewModel,
 }
 const serviceViewModelTypeLookup = ServiceViewModel.typeLookup = {
   SecurityService: SecurityServiceViewModel,

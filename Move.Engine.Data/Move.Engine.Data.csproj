@@ -16,4 +16,8 @@
     <PackageReference Include="IntelliTect.Coalesce" Version="$(CoalesceVersion)" />
     <PackageReference Include="Azure.Communication.Email" Version="1.0.1" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
 </Project>

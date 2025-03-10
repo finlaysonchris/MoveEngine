@@ -7,41 +7,19 @@ import type {
 
 
 const domain: Domain = { enums: {}, types: {}, services: {} }
-export const WidgetCategory = domain.enums.WidgetCategory = {
-  name: "WidgetCategory" as const,
-  displayName: "Widget Category",
-  type: "enum",
-  ...getEnumMeta<"Whizbangs"|"Sprecklesprockets"|"Discombobulators">([
-  {
-    value: 0,
-    strValue: "Whizbangs",
-    displayName: "Whizbangs",
-  },
-  {
-    value: 1,
-    strValue: "Sprecklesprockets",
-    displayName: "Sprecklesprockets",
-  },
-  {
-    value: 2,
-    strValue: "Discombobulators",
-    displayName: "Discombobulators",
-  },
-  ]),
-}
-export const Widget = domain.types.Widget = {
-  name: "Widget" as const,
-  displayName: "Widget",
+export const Equipment = domain.types.Equipment = {
+  name: "Equipment" as const,
+  displayName: "Equipment",
   description: "A sample model provided by the Coalesce template. Remove this when you start building your real data model.",
   get displayProp() { return this.props.name }, 
   type: "model",
-  controllerRoute: "Widget",
-  get keyProp() { return this.props.widgetId }, 
+  controllerRoute: "Equipment",
+  get keyProp() { return this.props.equipmentId }, 
   behaviorFlags: 7 as BehaviorFlags,
   props: {
-    widgetId: {
-      name: "widgetId",
-      displayName: "Widget Id",
+    equipmentId: {
+      name: "equipmentId",
+      displayName: "Equipment Id",
       type: "number",
       role: "primaryKey",
       hidden: 3 as HiddenAreas,
@@ -55,22 +33,14 @@ export const Widget = domain.types.Widget = {
         required: val => (val != null && val !== '') || "Name is required.",
       }
     },
-    category: {
-      name: "category",
-      displayName: "Category",
-      type: "enum",
-      get typeDef() { return WidgetCategory },
+    icon: {
+      name: "icon",
+      displayName: "Icon",
+      type: "string",
       role: "value",
       rules: {
-        required: val => val != null || "Category is required.",
+        required: val => (val != null && val !== '') || "Icon is required.",
       }
-    },
-    inventedOn: {
-      name: "inventedOn",
-      displayName: "Invented On",
-      type: "date",
-      dateKind: "datetime",
-      role: "value",
     },
     modifiedById: {
       name: "modifiedById",
@@ -153,11 +123,10 @@ export const SecurityService = domain.services.SecurityService = {
 
 interface AppDomain extends Domain {
   enums: {
-    WidgetCategory: typeof WidgetCategory
   }
   types: {
+    Equipment: typeof Equipment
     UserInfo: typeof UserInfo
-    Widget: typeof Widget
   }
   services: {
     SecurityService: typeof SecurityService

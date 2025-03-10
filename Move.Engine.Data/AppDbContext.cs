@@ -35,8 +35,5 @@ public class AppDbContext
         {
             relationship.DeleteBehavior = DeleteBehavior.Restrict;
         }
-
-
     }
-
 }

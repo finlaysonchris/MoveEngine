@@ -12,7 +12,7 @@ using Move.Engine.Data;
 namespace Move.Engine.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250301032951_Initial")]
+    [Migration("20250303005812_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -44,16 +44,13 @@ namespace Move.Engine.Data.Migrations
                     b.ToTable("DataProtectionKeys");
                 });
 
-            modelBuilder.Entity("Move.Engine.Data.Models.Widget", b =>
+            modelBuilder.Entity("Move.Engine.Data.Models.Equipment", b =>
                 {
-                    b.Property<int>("WidgetId")
+                    b.Property<int>("EquipmentId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WidgetId"));
-
-                    b.Property<int>("Category")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EquipmentId"));
 
                     b.Property<string>("CreatedById")
                         .HasColumnType("nvarchar(max)");
@@ -61,8 +58,9 @@ namespace Move.Engine.Data.Migrations
                     b.Property<DateTimeOffset>("CreatedOn")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset?>("InventedOn")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<string>("Icon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ModifiedById")
                         .HasColumnType("nvarchar(max)");
@@ -74,9 +72,9 @@ namespace Move.Engine.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("WidgetId");
+                    b.HasKey("EquipmentId");
 
-                    b.ToTable("Widgets");
+                    b.ToTable("Equpment");
                 });
 #pragma warning restore 612, 618
         }

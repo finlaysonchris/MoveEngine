@@ -21,75 +21,75 @@ using System.Threading.Tasks;
 
 namespace Move.Engine.Web.Api
 {
-    [Route("api/Widget")]
+    [Route("api/Equipment")]
     [Authorize]
     [ServiceFilter(typeof(IApiActionFilter))]
-    public partial class WidgetController
-        : BaseApiController<Move.Engine.Data.Models.Widget, WidgetParameter, WidgetResponse, Move.Engine.Data.AppDbContext>
+    public partial class EquipmentController
+        : BaseApiController<Move.Engine.Data.Models.Equipment, EquipmentParameter, EquipmentResponse, Move.Engine.Data.AppDbContext>
     {
-        public WidgetController(CrudContext<Move.Engine.Data.AppDbContext> context) : base(context)
+        public EquipmentController(CrudContext<Move.Engine.Data.AppDbContext> context) : base(context)
         {
-            GeneratedForClassViewModel = context.ReflectionRepository.GetClassViewModel<Move.Engine.Data.Models.Widget>();
+            GeneratedForClassViewModel = context.ReflectionRepository.GetClassViewModel<Move.Engine.Data.Models.Equipment>();
         }
 
         [HttpGet("get/{id}")]
         [Authorize]
-        public virtual Task<ItemResult<WidgetResponse>> Get(
+        public virtual Task<ItemResult<EquipmentResponse>> Get(
             int id,
             [FromQuery] DataSourceParameters parameters,
-            IDataSource<Move.Engine.Data.Models.Widget> dataSource)
+            IDataSource<Move.Engine.Data.Models.Equipment> dataSource)
             => GetImplementation(id, parameters, dataSource);
 
         [HttpGet("list")]
         [Authorize]
-        public virtual Task<ListResult<WidgetResponse>> List(
+        public virtual Task<ListResult<EquipmentResponse>> List(
             [FromQuery] ListParameters parameters,
-            IDataSource<Move.Engine.Data.Models.Widget> dataSource)
+            IDataSource<Move.Engine.Data.Models.Equipment> dataSource)
             => ListImplementation(parameters, dataSource);
 
         [HttpGet("count")]
         [Authorize]
         public virtual Task<ItemResult<int>> Count(
             [FromQuery] FilterParameters parameters,
-            IDataSource<Move.Engine.Data.Models.Widget> dataSource)
+            IDataSource<Move.Engine.Data.Models.Equipment> dataSource)
             => CountImplementation(parameters, dataSource);
 
         [HttpPost("save")]
         [Consumes("application/x-www-form-urlencoded", "multipart/form-data")]
         [Authorize]
-        public virtual Task<ItemResult<WidgetResponse>> Save(
-            [FromForm] WidgetParameter dto,
+        public virtual Task<ItemResult<EquipmentResponse>> Save(
+            [FromForm] EquipmentParameter dto,
             [FromQuery] DataSourceParameters parameters,
-            IDataSource<Move.Engine.Data.Models.Widget> dataSource,
-            IBehaviors<Move.Engine.Data.Models.Widget> behaviors)
+            IDataSource<Move.Engine.Data.Models.Equipment> dataSource,
+            IBehaviors<Move.Engine.Data.Models.Equipment> behaviors)
             => SaveImplementation(dto, parameters, dataSource, behaviors);
 
         [HttpPost("save")]
         [Consumes("application/json")]
         [Authorize]
-        public virtual Task<ItemResult<WidgetResponse>> SaveFromJson(
-            [FromBody] WidgetParameter dto,
+        public virtual Task<ItemResult<EquipmentResponse>> SaveFromJson(
+            [FromBody] EquipmentParameter dto,
             [FromQuery] DataSourceParameters parameters,
-            IDataSource<Move.Engine.Data.Models.Widget> dataSource,
-            IBehaviors<Move.Engine.Data.Models.Widget> behaviors)
+            IDataSource<Move.Engine.Data.Models.Equipment> dataSource,
+            IBehaviors<Move.Engine.Data.Models.Equipment> behaviors)
             => SaveImplementation(dto, parameters, dataSource, behaviors);
 
         [HttpPost("bulkSave")]
         [Authorize]
-        public virtual Task<ItemResult<WidgetResponse>> BulkSave(
+        public virtual Task<ItemResult<EquipmentResponse>> BulkSave(
             [FromBody] BulkSaveRequest dto,
             [FromQuery] DataSourceParameters parameters,
-            IDataSource<Move.Engine.Data.Models.Widget> dataSource,
+            IDataSource<Move.Engine.Data.Models.Equipment> dataSource,
             [FromServices] IDataSourceFactory dataSourceFactory,
             [FromServices] IBehaviorsFactory behaviorsFactory)
             => BulkSaveImplementation(dto, parameters, dataSource, dataSourceFactory, behaviorsFactory);
 
         [HttpPost("delete/{id}")]
         [Authorize]
-        public virtual Task<ItemResult<WidgetResponse>> Delete(
+        public virtual Task<ItemResult<EquipmentResponse>> Delete(
             int id,
-            IBehaviors<Move.Engine.Data.Models.Widget> behaviors,
-            IDataSource<Move.Engine.Data.Models.Widget> dataSource)
+            IBehaviors<Move.Engine.Data.Models.Equipment> behaviors,
+            IDataSource<Move.Engine.Data.Models.Equipment> dataSource)
             => DeleteImplementation(id, new DataSourceParameters(), dataSource, behaviors);
     }
 }

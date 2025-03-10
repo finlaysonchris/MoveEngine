@@ -3,8 +3,8 @@ import * as $models from './models.g'
 import { ModelApiClient, ServiceApiClient } from 'coalesce-vue/lib/api-client'
 import type { AxiosPromise, AxiosRequestConfig, ItemResult, ListResult } from 'coalesce-vue/lib/api-client'
 
-export class WidgetApiClient extends ModelApiClient<$models.Widget> {
-  constructor() { super($metadata.Widget) }
+export class EquipmentApiClient extends ModelApiClient<$models.Equipment> {
+  constructor() { super($metadata.Equipment) }
 }
 
 
