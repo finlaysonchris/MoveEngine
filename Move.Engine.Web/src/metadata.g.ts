@@ -132,13 +132,13 @@ export const WorkoutService = domain.services.WorkoutService = {
       transportType: "item",
       httpMethod: "POST",
       params: {
-        workingRequest: {
-          name: "workingRequest",
-          displayName: "Working Request",
+        workoutRequest: {
+          name: "workoutRequest",
+          displayName: "Workout Request",
           type: "string",
           role: "value",
           rules: {
-            required: val => (val != null && val !== '') || "Working Request is required.",
+            required: val => (val != null && val !== '') || "Workout Request is required.",
           }
         },
       },

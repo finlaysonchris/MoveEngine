@@ -35,6 +35,7 @@ builder.Logging
 builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile("appsettings.localhost.json", optional: true, reloadOnChange: true)
+    .AddUserSecrets<Program>()
     .AddEnvironmentVariables();
 
 #region Configure Services

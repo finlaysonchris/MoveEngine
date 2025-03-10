@@ -22,10 +22,10 @@ export class SecurityServiceApiClient extends ServiceApiClient<typeof $metadata.
 
 export class WorkoutServiceApiClient extends ServiceApiClient<typeof $metadata.WorkoutService> {
   constructor() { super($metadata.WorkoutService) }
-  public generateWorkout(workingRequest: string | null, $config?: AxiosRequestConfig): AxiosPromise<ItemResult<string>> {
+  public generateWorkout(workoutRequest: string | null, $config?: AxiosRequestConfig): AxiosPromise<ItemResult<string>> {
     const $method = this.$metadata.methods.generateWorkout
     const $params =  {
-      workingRequest,
+      workoutRequest,
     }
     return this.$invoke($method, $params, $config)
   }

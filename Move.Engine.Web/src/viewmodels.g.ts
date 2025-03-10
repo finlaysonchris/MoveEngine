@@ -52,9 +52,9 @@ export class WorkoutServiceViewModel extends ServiceViewModel<typeof $metadata.W
   public get generateWorkout() {
     const generateWorkout = this.$apiClient.$makeCaller(
       this.$metadata.methods.generateWorkout,
-      (c, workingRequest: string | null) => c.generateWorkout(workingRequest),
-      () => ({workingRequest: null as string | null, }),
-      (c, args) => c.generateWorkout(args.workingRequest))
+      (c, workoutRequest: string | null) => c.generateWorkout(workoutRequest),
+      () => ({workoutRequest: null as string | null, }),
+      (c, args) => c.generateWorkout(args.workoutRequest))
     
     Object.defineProperty(this, 'generateWorkout', {value: generateWorkout});
     return generateWorkout

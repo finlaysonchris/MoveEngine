@@ -39,12 +39,12 @@ namespace Move.Engine.Web.Api
         [HttpPost("GenerateWorkout")]
         [Authorize]
         [Consumes("application/x-www-form-urlencoded", "multipart/form-data")]
-        public virtual ItemResult<string> GenerateWorkout(
-            [FromForm(Name = "workingRequest")] string workingRequest)
+        public virtual async Task<ItemResult<string>> GenerateWorkout(
+            [FromForm(Name = "workoutRequest")] string workoutRequest)
         {
             var _params = new
             {
-                WorkingRequest = workingRequest
+                WorkoutRequest = workoutRequest
             };
 
             if (Context.Options.ValidateAttributesForMethods)
@@ -54,8 +54,8 @@ namespace Move.Engine.Web.Api
                 if (!_validationResult.WasSuccessful) return new ItemResult<string>(_validationResult);
             }
 
-            var _methodResult = Service.GenerateWorkout(
-                _params.WorkingRequest
+            var _methodResult = await Service.GenerateWorkout(
+                _params.WorkoutRequest
             );
             var _result = new ItemResult<string>();
             _result.Object = _methodResult;
@@ -64,7 +64,7 @@ namespace Move.Engine.Web.Api
 
         public class GenerateWorkoutParameters
         {
-            public string WorkingRequest { get; set; }
+            public string WorkoutRequest { get; set; }
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Move.Engine.Web.Api
         [HttpPost("GenerateWorkout")]
         [Authorize]
         [Consumes("application/json")]
-        public virtual ItemResult<string> GenerateWorkout(
+        public virtual async Task<ItemResult<string>> GenerateWorkout(
             [FromBody] GenerateWorkoutParameters _params
         )
         {
@@ -84,8 +84,8 @@ namespace Move.Engine.Web.Api
                 if (!_validationResult.WasSuccessful) return new ItemResult<string>(_validationResult);
             }
 
-            var _methodResult = Service.GenerateWorkout(
-                _params.WorkingRequest
+            var _methodResult = await Service.GenerateWorkout(
+                _params.WorkoutRequest
             );
             var _result = new ItemResult<string>();
             _result.Object = _methodResult;

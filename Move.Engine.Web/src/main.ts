@@ -18,7 +18,6 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import "coalesce-vue-vuetify3/styles.css";
 import "vuetify/styles";
 import "@/styles/site.scss";
-
 import $metadata from "@/metadata.g";
 // viewmodels.g has side effects - it populates the global lookup on ViewModel and ListViewModel.
 // This global lookup allows the admin page components to function.
