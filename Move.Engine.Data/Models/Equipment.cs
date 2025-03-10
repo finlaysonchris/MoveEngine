@@ -4,21 +4,12 @@ namespace Move.Engine.Data.Models;
 
 
 [Description("A sample model provided by the Coalesce template. Remove this when you start building your real data model.")]
-public class Widget
+public class Equipment
     : TrackingBase
 {
-    public int WidgetId { get; set; }
+    public int EquipmentId { get; set; }
 
     public required string Name { get; set; }
 
-    public required WidgetCategory Category { get; set; }
-
-    public DateTimeOffset? InventedOn { get; set; }
-}
-
-public enum WidgetCategory
-{
-    Whizbangs,
-    Sprecklesprockets,
-    Discombobulators,
+    public required string Icon { get; set; }
 }

@@ -47,6 +47,25 @@ export class SecurityServiceViewModel extends ServiceViewModel<typeof $metadata.
 }
 
 
+export class WorkoutServiceViewModel extends ServiceViewModel<typeof $metadata.WorkoutService, $apiClients.WorkoutServiceApiClient> {
+  
+  public get generateWorkout() {
+    const generateWorkout = this.$apiClient.$makeCaller(
+      this.$metadata.methods.generateWorkout,
+      (c, workingRequest: string | null) => c.generateWorkout(workingRequest),
+      () => ({workingRequest: null as string | null, }),
+      (c, args) => c.generateWorkout(args.workingRequest))
+    
+    Object.defineProperty(this, 'generateWorkout', {value: generateWorkout});
+    return generateWorkout
+  }
+  
+  constructor() {
+    super($metadata.WorkoutService, new $apiClients.WorkoutServiceApiClient())
+  }
+}
+
+
 const viewModelTypeLookup = ViewModel.typeLookup = {
   Equipment: EquipmentViewModel,
 }
@@ -55,5 +74,6 @@ const listViewModelTypeLookup = ListViewModel.typeLookup = {
 }
 const serviceViewModelTypeLookup = ServiceViewModel.typeLookup = {
   SecurityService: SecurityServiceViewModel,
+  WorkoutService: WorkoutServiceViewModel,
 }
 

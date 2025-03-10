@@ -120,6 +120,37 @@ export const SecurityService = domain.services.SecurityService = {
     },
   },
 }
+export const WorkoutService = domain.services.WorkoutService = {
+  name: "WorkoutService",
+  displayName: "Workout Service",
+  type: "service",
+  controllerRoute: "WorkoutService",
+  methods: {
+    generateWorkout: {
+      name: "generateWorkout",
+      displayName: "Generate Workout",
+      transportType: "item",
+      httpMethod: "POST",
+      params: {
+        workingRequest: {
+          name: "workingRequest",
+          displayName: "Working Request",
+          type: "string",
+          role: "value",
+          rules: {
+            required: val => (val != null && val !== '') || "Working Request is required.",
+          }
+        },
+      },
+      return: {
+        name: "$return",
+        displayName: "Result",
+        type: "string",
+        role: "value",
+      },
+    },
+  },
+}
 
 interface AppDomain extends Domain {
   enums: {
@@ -130,6 +161,7 @@ interface AppDomain extends Domain {
   }
   services: {
     SecurityService: typeof SecurityService
+    WorkoutService: typeof WorkoutService
   }
 }
 

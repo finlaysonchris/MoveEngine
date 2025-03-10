@@ -1,27 +1,24 @@
-using Move.Engine.Data;
-using Move.Engine.Data.Auth;
-using Move.Engine.Web;
-using IntelliTect.Coalesce;
-using Microsoft.ApplicationInsights.DependencyCollector;
-using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.Extensions.Logging.ApplicationInsights;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.Logging.Console;
-using Microsoft.OpenApi.Models;
-using Scalar.AspNetCore;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc;
-using Move.Engine.Data.Communication;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Azure.Core;
 using Azure.Identity;
+using IntelliTect.Coalesce;
+using Microsoft.ApplicationInsights.DependencyCollector;
+using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging.ApplicationInsights;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.OpenApi.Models;
+using Move.Engine.Data;
+using Move.Engine.Data.Auth;
+using Move.Engine.Data.Communication;
+using Move.Engine.Data.Services;
+using Move.Engine.Web;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -83,6 +80,8 @@ services
 services.AddSingleton<TokenCredential, DefaultAzureCredential>();
 services.Configure<AzureEmailOptions>(builder.Configuration.GetSection("Communication:Azure"));
 services.AddTransient<IEmailService, AzureEmailService>();
+services.AddScoped<WorkoutService>();
+
 
 services.AddSwaggerGen(c =>
 {
@@ -111,21 +110,21 @@ if (app.Environment.IsDevelopment())
 
     app.MapCoalesceSecurityOverview("coalesce-security");
 
-	// TODO: Dummy authentication for initial development.
-	// Replace this with a proper authentication scheme like
-	// Windows Authentication, or an OIDC provider, or something else.
-	// If you wanted to use ASP.NET Core Identity, you're recommended
-	// to keep the "--Identity" parameter to the Coalesce template enabled.
-	app.Use(async (context, next) =>
-	{
-		Claim[] claims = [new Claim(ClaimTypes.Name, "developmentuser")];
+    // TODO: Dummy authentication for initial development.
+    // Replace this with a proper authentication scheme like
+    // Windows Authentication, or an OIDC provider, or something else.
+    // If you wanted to use ASP.NET Core Identity, you're recommended
+    // to keep the "--Identity" parameter to the Coalesce template enabled.
+    app.Use(async (context, next) =>
+    {
+        Claim[] claims = [new Claim(ClaimTypes.Name, "developmentuser")];
 
-		var identity = new ClaimsIdentity(claims, "dummy-auth");
-		context.User = new ClaimsPrincipal(identity);
+        var identity = new ClaimsIdentity(claims, "dummy-auth");
+        context.User = new ClaimsPrincipal(identity);
 
-		await next.Invoke();
-	});
-	// End Dummy Authentication.
+        await next.Invoke();
+    });
+    // End Dummy Authentication.
 }
 
 app.UseAuthentication();
@@ -176,7 +175,7 @@ using (var scope = app.Services.CreateScope())
     // Run database migrations.
     using var db = serviceScope.GetRequiredService<AppDbContext>();
     db.Database.SetCommandTimeout(TimeSpan.FromMinutes(10));
-	db.Database.Migrate();
+    db.Database.Migrate();
     ActivatorUtilities.GetServiceOrCreateInstance<DatabaseSeeder>(serviceScope).Seed();
 }
 
