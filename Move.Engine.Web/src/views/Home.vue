@@ -12,7 +12,6 @@
       <v-window-item value="equipment">
         <v-select
           v-model="selectedEquipment"
-          label="Select Equipment"
           :items="equipmentOptions"
           multiple
         ></v-select>
@@ -20,9 +19,9 @@
 
       <v-window-item value="style">
         <v-select
-          v-model="selectedStyle"
-          label="Workout Style"
+          v-model="selectedStyles"
           :items="workoutStyles"
+          multiple
         ></v-select>
       </v-window-item>
 
@@ -35,7 +34,10 @@
       </v-window-item>
     </v-window>
 
-    <v-textarea v-model="editableRequest"></v-textarea>
+    <v-checkbox v-model="showRequest" label="Show Workout Request"></v-checkbox>
+    <span v-if="showRequest">
+      <v-textarea v-model="editableRequest"></v-textarea>
+    </span>
     <div v-html="renderedMarkdown"></div>
     <v-btn @click="submitRequest">Generate Workout</v-btn>
   </div>
@@ -75,17 +77,17 @@ const workoutService = new WorkoutServiceViewModel();
 const generatedWorkout = ref<string>("");
 const tab = ref("equipment");
 const length = ref<number | null>(null);
-const selectedStyle = ref<string | null>(null);
+const selectedStyles = ref<string[] | null>(null);
 const selectedEquipment = ref<string[]>([]);
-
+const showRequest = ref(false);
 const editableRequest = computed({
   get: () => {
     let request = "Generate a workout.";
     if (selectedEquipment.value.length) {
-      request = `using ${selectedEquipment.value.join(", ")}. ${request}`;
+      request = `Using ${selectedEquipment.value.join(", ")}. ${request}`;
     }
-    if (selectedStyle.value) {
-      request = `${selectedStyle.value} workout. ${request}`;
+    if (selectedStyles.value?.length) {
+      request = `Using ${selectedStyles.value.join(", ")} workout style(s). ${request}`;
     }
     if (length.value) {
       request = `${length.value} minute ${request}`;
@@ -105,7 +107,6 @@ const submitRequest = async () => {
   generatedWorkout.value = await workoutService.generateWorkout(
     editableRequest.value,
   );
-  alert(generatedWorkout.value);
 };
 
 useTitle("Workout Generator");
