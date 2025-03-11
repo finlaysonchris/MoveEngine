@@ -17,6 +17,8 @@
     "@vueuse/core": "^11.0.3",
     "coalesce-vue": "^5.3.3",
     "coalesce-vue-vuetify3": "^5.3.3",
+    "markdown-it": "^14.1.0",
+    "marked": "^15.0.7",
     "typeface-roboto": "1.1.13",
     "vue": "^3.5.11",
     "vue-router": "^4.4.5",

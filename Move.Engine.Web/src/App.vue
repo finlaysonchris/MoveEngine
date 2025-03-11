@@ -28,13 +28,8 @@
     <v-navigation-drawer v-model="drawer">
       <v-list>
         <v-list-item to="/" prepend-icon="fa fa-home" title="Home" />
-        <v-list-item
-          to="/widget"
-          prepend-icon="fa fa-palette"
-          title="Custom Page Example"
-        />
         <v-divider></v-divider>
-        <v-list-item to="/admin" prepend-icon="fa fa-cogs" title="Admin" />
+        <v-list-item to="/profile" prepend-icon="fa fa-cogs" title="Profile" />
       </v-list>
 
       <div
