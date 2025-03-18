@@ -55,7 +55,7 @@ import { useLocalStorage, usePreferredDark } from "@vueuse/core";
 import { useTheme } from "vuetify";
 import { format } from "date-fns-tz";
 
-const drawer = ref<boolean | null>(null);
+const drawer = ref<boolean | null>(false);
 
 const vuetifyTheme = useTheme();
 

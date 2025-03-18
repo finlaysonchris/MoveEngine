@@ -102,13 +102,14 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
+    //app.UseDeveloperExceptionPage();
 
-    app.UseViteDevelopmentServer(c =>
-    {
-        c.DevServerPort = 11696;
-    });
-
+    //app.UseViteDevelopmentServer(c =>
+    //{
+    //    c.DevServerPort = 11696;
+    //});
+}
+{
     app.MapCoalesceSecurityOverview("coalesce-security");
 
     // TODO: Dummy authentication for initial development.
