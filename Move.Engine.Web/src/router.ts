@@ -13,8 +13,10 @@ const router = createRouter({
       component: () => import("./views/Admin.vue"),
     },
     {
-      path: "/openapi",
-      component: () => import("./views/OpenAPI.vue"),
+      path: "/user/:id",
+      alias: "/admin/User/edit/:id", // Override coalesce admin page
+      props: true,
+      component: () => import("./views/UserProfile.vue"),
     },
 
     // Coalesce admin routes
@@ -59,38 +61,5 @@ function titledAdminPage<
     },
   });
 }
-
-// Azure Monitor Application Insights configuration
-let flushPageView: (() => void) | undefined;
-router.beforeEach((to, from) => {
-  if (to.path != from.path) {
-    // If there's a previous page view still unsent,
-    // flush it now before the new page takes over and changes
-    // the window.location and document.title.
-    // This only happens when a user is clicking through pages very fast.
-    flushPageView?.();
-  }
-});
-router.afterEach((to, from) => {
-  if (to.path != from.path) {
-    const time = new Date();
-    let hasSent = false;
-
-    flushPageView = () => {
-      if (hasSent) return;
-      hasSent = true;
-      //@ts-expect-error appInsights from backend JavaScriptSnippet; no types available.
-      window.appInsights?.trackPageView({
-        startTime: time,
-        properties: { duration: 0 },
-      });
-    };
-
-    // Wait a moment before sending the page view
-    // so that the page has a chance to update `document.title`,
-    // which makes the timeline easier to read in app insights.
-    setTimeout(flushPageView, 2000);
-  }
-});
 
 export default router;

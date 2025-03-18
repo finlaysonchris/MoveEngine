@@ -1,10 +1,27 @@
+using Move.Engine.Data.Coalesce;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
+using System.Linq.Expressions;
+using System.Security.Cryptography;
 
 namespace Move.Engine.Data;
 
 [Coalesce]
 public class AppDbContext
-    : DbContext
+    : IdentityDbContext<
+        User,
+        Role,
+        string,
+        IdentityUserClaim<string>,
+        UserRole,
+        IdentityUserLogin<string>,
+        RoleClaim,
+        IdentityUserToken<string>
+    >
     , IDataProtectionKeyContext
 {
     public bool SuppressAudit { get; set; } = false;
@@ -14,7 +31,10 @@ public class AppDbContext
 
     public AppDbContext(DbContextOptions options) : base(options) { }
 
-    public DbSet<Equipment> Equpment => Set<Equipment>();
+
+
+    public DbSet<UserPhoto> UserPhotos => Set<UserPhoto>();
+
 
     [InternalUse]
     public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
@@ -35,5 +55,36 @@ public class AppDbContext
         {
             relationship.DeleteBehavior = DeleteBehavior.Restrict;
         }
+
+        builder.Entity<UserRole>(userRole =>
+        {
+            userRole.HasKey(ur => new { ur.UserId, ur.RoleId });
+
+            userRole.HasOne(ur => ur.Role)
+                .WithMany()
+                .HasForeignKey(ur => ur.RoleId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            userRole.HasOne(ur => ur.User)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.UserId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<Role>(e =>
+        {
+            e.PrimitiveCollection(e => e.Permissions).ElementType().HasConversion<string>();
+
+            e.HasMany<RoleClaim>()
+                .WithOne(rc => rc.Role)
+                .HasPrincipalKey(r => r.Id)
+                .HasForeignKey(rc => rc.RoleId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
     }
+
 }

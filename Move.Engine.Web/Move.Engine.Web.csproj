@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <DotnetCliToolTargetFramework>net9.0</DotnetCliToolTargetFramework>
-    <UserSecretsId>915f77b5-247d-4f80-bc6d-b5c16786f34c</UserSecretsId>
+    <UserSecretsId>b5991484-6a65-4679-8bf3-d0454a0b5779</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,9 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="IntelliTect.Coalesce.Vue" Version="$(CoalesceVersion)" />
-    <PackageReference Include="IntelliTect.Coalesce.Swashbuckle" Version="$(CoalesceVersion)" />
-    <PackageReference Include="Scalar.AspNetCore" Version="1.2.37" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>

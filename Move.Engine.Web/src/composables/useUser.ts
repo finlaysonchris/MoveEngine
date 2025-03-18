@@ -1,7 +1,8 @@
-import { userInfo } from "@/user-service";
+import { userInfo, can } from "@/user-service";
 
 export function useUser() {
   return {
     userInfo,
+    can,
   };
 }

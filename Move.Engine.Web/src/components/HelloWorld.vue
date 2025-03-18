@@ -24,28 +24,6 @@
               href="https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli"
               >create a migration with Entity Framework</a
             >.
-
-            <h2 class="mt-5">3. Add Authentication</h2>
-            <strong> Implement a proper authentication mechanism</strong> in
-            Program.cs and remove the existing dummy authentication. If you want
-            to use
-            <a
-              href="https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity"
-            >
-              ASP.NET Core Identity </a
-            >, you should start over and include the Identity option when
-            instantiating the Coalesce project template. Otherwise,
-            <a
-              href="https://learn.microsoft.com/en-us/aspnet/core/security/how-to-choose-identity-solution"
-            >
-              read more about authentication in ASP.NET Core </a
-            >.
-            <br />
-            <br />
-            This template authenticates all users as a dummy user to facilitate
-            rapid initial development. Since all Coalesce endpoints require
-            authentication by default, you would otherwise have to setup a real
-            authentication scheme before you could begin development.
           </v-card-text>
         </v-card>
         <br />

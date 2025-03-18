@@ -18,6 +18,7 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import "coalesce-vue-vuetify3/styles.css";
 import "vuetify/styles";
 import "@/styles/site.scss";
+
 import $metadata from "@/metadata.g";
 // viewmodels.g has side effects - it populates the global lookup on ViewModel and ListViewModel.
 // This global lookup allows the admin page components to function.
@@ -48,11 +49,6 @@ const vuetify = createVuetify({
           // TODO: Customize theme colors
         },
       },
-      dark: {
-        colors: {
-          // TODO: Customize theme colors
-        },
-      },
     },
   },
 });
@@ -74,20 +70,6 @@ CoalesceAxiosClient.interceptors.response.use(undefined, (error) => {
 // SETUP: coalesce-vue-vuetify
 const coalesceVuetify = createCoalesceVuetify({
   metadata: $metadata,
-});
-
-// SETUP: app insights
-//@ts-expect-error AppInsights imported from backend JavaScriptSnippet; no types available.
-window.appInsights?.addTelemetryInitializer(function (envelope) {
-  if (
-    envelope.baseType === "ExceptionData" &&
-    // Filter out unactionable, junk errors:
-    envelope.data?.message?.includes(
-      "ResizeObserver loop completed with undelivered notifications",
-    )
-  ) {
-    return false;
-  }
 });
 
 const app = createApp(App);

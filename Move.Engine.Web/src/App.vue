@@ -8,20 +8,28 @@
 
       <v-menu bottom offset-y>
         <template #activator="{ props }">
-          <v-list-item v-bind="props"> Settings </v-list-item>
+          <v-list-item v-bind="props">
+            <UserAvatar :user="$userInfo" />
+          </v-list-item>
         </template>
         <v-list min-width="300px">
-          <v-list-item prepend-icon="fa fa-moon">
-            <v-switch
-              v-model="theme"
-              label="Dark Mode"
-              true-value="dark"
-              false-value="light"
-              hide-details
-              class="ml-2"
-              density="compact"
-            />
+          <v-list-item
+            :title="$userInfo.fullName!"
+            :subtitle="$userInfo.userName!"
+            :to="`/user/${$userInfo.id}`"
+          >
+            <template #prepend>
+              <UserAvatar :user="$userInfo" class="mr-2 ml-n1" />
+            </template>
           </v-list-item>
+          <v-divider class="mt-1" />
+
+          <v-divider />
+          <v-list-item
+            href="/SignOut"
+            prepend-icon="fa fa-sign-out"
+            title="Log Out"
+          />
         </v-list>
       </v-menu>
     </v-app-bar>
@@ -29,7 +37,24 @@
       <v-list>
         <v-list-item to="/" prepend-icon="fa fa-home" title="Home" />
         <v-divider></v-divider>
-        <v-list-item to="/profile" prepend-icon="fa fa-cogs" title="Profile" />
+        <v-list-item
+          v-if="$can(Permission.UserAdmin)"
+          to="/admin/User"
+          prepend-icon="fa fa-users"
+          title="Users"
+        />
+        <v-list-item
+          v-if="$can(Permission.UserAdmin)"
+          to="/admin/Role"
+          prepend-icon="fa fa-id-card"
+          title="Roles"
+        />
+        <v-list-item
+          v-if="$can(Permission.Admin)"
+          to="/admin"
+          prepend-icon="fa fa-cogs"
+          title="Admin"
+        />
       </v-list>
 
       <div
@@ -43,7 +68,12 @@
       <!-- https://stackoverflow.com/questions/52847979/what-is-router-view-key-route-fullpath -->
       <router-view v-slot="{ Component, route }">
         <transition name="router-transition" mode="out-in" appear>
-          <component :is="Component" :key="route.path" />
+          <Forbidden
+            v-if="isForbidden"
+            key="$forbidden"
+            :permissions="routeMeta?.permissions"
+          />
+          <component :is="Component" v-else :key="route.path" />
         </transition>
       </router-view>
     </v-main>
@@ -51,19 +81,38 @@
 </template>
 
 <script setup lang="ts">
-import { useLocalStorage, usePreferredDark } from "@vueuse/core";
-import { useTheme } from "vuetify";
+import { Permission } from "./models.g";
+import Forbidden from "./views/errors/Forbidden.vue";
 import { format } from "date-fns-tz";
 
-const drawer = ref<boolean | null>(false);
+const drawer = ref<boolean | null>(null);
 
-const vuetifyTheme = useTheme();
+const router = useRouter();
+const { userInfo } = useUser();
 
-const theme = useLocalStorage(
-  "theme",
-  usePreferredDark().value ? "dark" : "light",
-);
-watch(theme, (v) => (vuetifyTheme.global.name.value = v), { immediate: true });
+const routeMeta = computed(() => {
+  const route = router.currentRoute.value;
+  return route?.meta as
+    | {
+        permissions?: Permission[];
+      }
+    | null
+    | undefined;
+});
+
+const isForbidden = computed(() => {
+  if (
+    routeMeta.value?.permissions &&
+    !userInfo.value?.permissions?.some(
+      // @ts-expect-error indexing enum with arbitrary string
+      (r) => routeMeta.value?.permissions?.includes(Permission[r as any]),
+    )
+  ) {
+    return true;
+  }
+
+  return false;
+});
 
 const buildDate = computed(() => {
   if (!BUILD_DATE) return "";

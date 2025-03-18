@@ -21,75 +21,75 @@ using System.Threading.Tasks;
 
 namespace Move.Engine.Web.Api
 {
-    [Route("api/Equipment")]
+    [Route("api/Role")]
     [Authorize]
     [ServiceFilter(typeof(IApiActionFilter))]
-    public partial class EquipmentController
-        : BaseApiController<Move.Engine.Data.Models.Equipment, EquipmentParameter, EquipmentResponse, Move.Engine.Data.AppDbContext>
+    public partial class RoleController
+        : BaseApiController<Move.Engine.Data.Models.Role, RoleParameter, RoleResponse, Move.Engine.Data.AppDbContext>
     {
-        public EquipmentController(CrudContext<Move.Engine.Data.AppDbContext> context) : base(context)
+        public RoleController(CrudContext<Move.Engine.Data.AppDbContext> context) : base(context)
         {
-            GeneratedForClassViewModel = context.ReflectionRepository.GetClassViewModel<Move.Engine.Data.Models.Equipment>();
+            GeneratedForClassViewModel = context.ReflectionRepository.GetClassViewModel<Move.Engine.Data.Models.Role>();
         }
 
         [HttpGet("get/{id}")]
         [Authorize]
-        public virtual Task<ItemResult<EquipmentResponse>> Get(
-            int id,
+        public virtual Task<ItemResult<RoleResponse>> Get(
+            string id,
             [FromQuery] DataSourceParameters parameters,
-            IDataSource<Move.Engine.Data.Models.Equipment> dataSource)
+            IDataSource<Move.Engine.Data.Models.Role> dataSource)
             => GetImplementation(id, parameters, dataSource);
 
         [HttpGet("list")]
         [Authorize]
-        public virtual Task<ListResult<EquipmentResponse>> List(
+        public virtual Task<ListResult<RoleResponse>> List(
             [FromQuery] ListParameters parameters,
-            IDataSource<Move.Engine.Data.Models.Equipment> dataSource)
+            IDataSource<Move.Engine.Data.Models.Role> dataSource)
             => ListImplementation(parameters, dataSource);
 
         [HttpGet("count")]
         [Authorize]
         public virtual Task<ItemResult<int>> Count(
             [FromQuery] FilterParameters parameters,
-            IDataSource<Move.Engine.Data.Models.Equipment> dataSource)
+            IDataSource<Move.Engine.Data.Models.Role> dataSource)
             => CountImplementation(parameters, dataSource);
 
         [HttpPost("save")]
         [Consumes("application/x-www-form-urlencoded", "multipart/form-data")]
-        [Authorize]
-        public virtual Task<ItemResult<EquipmentResponse>> Save(
-            [FromForm] EquipmentParameter dto,
+        [Authorize(Roles = "UserAdmin")]
+        public virtual Task<ItemResult<RoleResponse>> Save(
+            [FromForm] RoleParameter dto,
             [FromQuery] DataSourceParameters parameters,
-            IDataSource<Move.Engine.Data.Models.Equipment> dataSource,
-            IBehaviors<Move.Engine.Data.Models.Equipment> behaviors)
+            IDataSource<Move.Engine.Data.Models.Role> dataSource,
+            IBehaviors<Move.Engine.Data.Models.Role> behaviors)
             => SaveImplementation(dto, parameters, dataSource, behaviors);
 
         [HttpPost("save")]
         [Consumes("application/json")]
-        [Authorize]
-        public virtual Task<ItemResult<EquipmentResponse>> SaveFromJson(
-            [FromBody] EquipmentParameter dto,
+        [Authorize(Roles = "UserAdmin")]
+        public virtual Task<ItemResult<RoleResponse>> SaveFromJson(
+            [FromBody] RoleParameter dto,
             [FromQuery] DataSourceParameters parameters,
-            IDataSource<Move.Engine.Data.Models.Equipment> dataSource,
-            IBehaviors<Move.Engine.Data.Models.Equipment> behaviors)
+            IDataSource<Move.Engine.Data.Models.Role> dataSource,
+            IBehaviors<Move.Engine.Data.Models.Role> behaviors)
             => SaveImplementation(dto, parameters, dataSource, behaviors);
 
         [HttpPost("bulkSave")]
         [Authorize]
-        public virtual Task<ItemResult<EquipmentResponse>> BulkSave(
+        public virtual Task<ItemResult<RoleResponse>> BulkSave(
             [FromBody] BulkSaveRequest dto,
             [FromQuery] DataSourceParameters parameters,
-            IDataSource<Move.Engine.Data.Models.Equipment> dataSource,
+            IDataSource<Move.Engine.Data.Models.Role> dataSource,
             [FromServices] IDataSourceFactory dataSourceFactory,
             [FromServices] IBehaviorsFactory behaviorsFactory)
             => BulkSaveImplementation(dto, parameters, dataSource, dataSourceFactory, behaviorsFactory);
 
         [HttpPost("delete/{id}")]
-        [Authorize]
-        public virtual Task<ItemResult<EquipmentResponse>> Delete(
-            int id,
-            IBehaviors<Move.Engine.Data.Models.Equipment> behaviors,
-            IDataSource<Move.Engine.Data.Models.Equipment> dataSource)
+        [Authorize(Roles = "UserAdmin")]
+        public virtual Task<ItemResult<RoleResponse>> Delete(
+            string id,
+            IBehaviors<Move.Engine.Data.Models.Role> behaviors,
+            IDataSource<Move.Engine.Data.Models.Role> dataSource)
             => DeleteImplementation(id, new DataSourceParameters(), dataSource, behaviors);
     }
 }

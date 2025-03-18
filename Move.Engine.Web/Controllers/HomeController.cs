@@ -1,5 +1,4 @@
 using Move.Engine.Data.Auth;
-using Microsoft.ApplicationInsights.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +19,6 @@ public class HomeController() : Controller
     [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
     [Authorize]
     public async Task<IActionResult> Index(
-        [FromServices] JavaScriptSnippet appInsightsSnippet,
         [FromServices] IWebHostEnvironment hostingEnvironment
     )
     {
@@ -40,14 +38,6 @@ public class HomeController() : Controller
         </script>
         """;
 
-        if (appInsightsSnippet.FullScript.Length > 0)
-        {
-            headPrepend +=
-                appInsightsSnippet.FullScript
-                // Remove the automatic trackPageView event that is fired on load.
-                // We fire our own page tracking events in router.ts to get better data.
-                + "<script>window.appInsights.queue.pop()</script>";
-        }
 
         contents = contents.Replace("<head>", "<head>" + headPrepend);
 

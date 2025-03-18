@@ -1,18 +1,22 @@
 import { SecurityServiceViewModel } from "@/viewmodels.g";
-import { UserInfo } from "@/models.g";
+import { Permission, UserInfo } from "@/models.g";
 
 const securityService = new SecurityServiceViewModel();
 securityService.whoAmI.setConcurrency("debounce");
-
-securityService.whoAmI.onFulfilled(() => {
-  //@ts-expect-error AppInsights imported from backend JavaScriptSnippet; no types available.
-  window.appInsights?.setAuthenticatedUserContext(userInfo.value.userName);
-});
 
 /** Properties about the currently authenticated user */
 export const userInfo = computed(() => {
   return securityService.whoAmI.result ?? new UserInfo();
 });
+
+/** Returns true if the user has any of the specified permissions */
+export function can(...permission: Permission[]) {
+  return (
+    userInfo.value?.permissions?.some((r) =>
+      permission.map((p) => Permission[p]).includes(r),
+    ) || false
+  );
+}
 
 export const refreshUserInfo = () => securityService.whoAmI();
 
@@ -36,10 +40,14 @@ document.addEventListener(
 // Make useful properties available in vue <template>s
 declare module "vue" {
   interface ComponentCustomProperties {
+    Permission: typeof Permission;
+    $can: typeof can;
     $userInfo: (typeof userInfo)["value"];
   }
 }
 export const globalProperties = {
+  Permission,
+  $can: can,
   get $userInfo() {
     return userInfo.value;
   },

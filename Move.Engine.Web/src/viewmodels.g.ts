@@ -3,27 +3,138 @@ import * as $models from './models.g'
 import * as $apiClients from './api-clients.g'
 import { ViewModel, ListViewModel, ViewModelCollection, ServiceViewModel, type DeepPartial, defineProps } from 'coalesce-vue/lib/viewmodel'
 
-export interface EquipmentViewModel extends $models.Equipment {
-  equipmentId: number | null;
+export interface RoleViewModel extends $models.Role {
   name: string | null;
-  icon: string | null;
-  modifiedById: string | null;
-  modifiedOn: Date | null;
-  createdById: string | null;
-  createdOn: Date | null;
+  permissions: $models.Permission[] | null;
+  id: string | null;
 }
-export class EquipmentViewModel extends ViewModel<$models.Equipment, $apiClients.EquipmentApiClient, number> implements $models.Equipment  {
+export class RoleViewModel extends ViewModel<$models.Role, $apiClients.RoleApiClient, string> implements $models.Role  {
   
-  constructor(initialData?: DeepPartial<$models.Equipment> | null) {
-    super($metadata.Equipment, new $apiClients.EquipmentApiClient(), initialData)
+  constructor(initialData?: DeepPartial<$models.Role> | null) {
+    super($metadata.Role, new $apiClients.RoleApiClient(), initialData)
   }
 }
-defineProps(EquipmentViewModel, $metadata.Equipment)
+defineProps(RoleViewModel, $metadata.Role)
 
-export class EquipmentListViewModel extends ListViewModel<$models.Equipment, $apiClients.EquipmentApiClient, EquipmentViewModel> {
+export class RoleListViewModel extends ListViewModel<$models.Role, $apiClients.RoleApiClient, RoleViewModel> {
   
   constructor() {
-    super($metadata.Equipment, new $apiClients.EquipmentApiClient())
+    super($metadata.Role, new $apiClients.RoleApiClient())
+  }
+}
+
+
+export interface UserViewModel extends $models.User {
+  fullName: string | null;
+  userName: string | null;
+  email: string | null;
+  emailConfirmed: boolean | null;
+  photoHash: string | null;
+  
+  /** If set, the user will be blocked from signing in until this date. */
+  lockoutEnd: Date | null;
+  
+  /** If enabled, the user can be locked out. */
+  lockoutEnabled: boolean | null;
+  get userRoles(): ViewModelCollection<UserRoleViewModel, $models.UserRole>;
+  set userRoles(value: (UserRoleViewModel | $models.UserRole)[] | null);
+  roleNames: string[] | null;
+  id: string | null;
+}
+export class UserViewModel extends ViewModel<$models.User, $apiClients.UserApiClient, string> implements $models.User  {
+  static DataSources = $models.User.DataSources;
+  
+  
+  public addToUserRoles(initialData?: DeepPartial<$models.UserRole> | null) {
+    return this.$addChild('userRoles', initialData) as UserRoleViewModel
+  }
+  
+  get roles(): ReadonlyArray<RoleViewModel> {
+    return (this.userRoles || []).map($ => $.role!).filter($ => $)
+  }
+  
+  public get getPhoto() {
+    const getPhoto = this.$apiClient.$makeCaller(
+      this.$metadata.methods.getPhoto,
+      (c) => c.getPhoto(this.$primaryKey, this.photoHash),
+      () => ({}),
+      (c, args) => c.getPhoto(this.$primaryKey, this.photoHash))
+    
+    Object.defineProperty(this, 'getPhoto', {value: getPhoto});
+    return getPhoto
+  }
+  
+  public get setEmail() {
+    const setEmail = this.$apiClient.$makeCaller(
+      this.$metadata.methods.setEmail,
+      (c, newEmail: string | null) => c.setEmail(this.$primaryKey, newEmail),
+      () => ({newEmail: null as string | null, }),
+      (c, args) => c.setEmail(this.$primaryKey, args.newEmail))
+    
+    Object.defineProperty(this, 'setEmail', {value: setEmail});
+    return setEmail
+  }
+  
+  public get sendEmailConfirmation() {
+    const sendEmailConfirmation = this.$apiClient.$makeCaller(
+      this.$metadata.methods.sendEmailConfirmation,
+      (c) => c.sendEmailConfirmation(this.$primaryKey),
+      () => ({}),
+      (c, args) => c.sendEmailConfirmation(this.$primaryKey))
+    
+    Object.defineProperty(this, 'sendEmailConfirmation', {value: sendEmailConfirmation});
+    return sendEmailConfirmation
+  }
+  
+  public get setPassword() {
+    const setPassword = this.$apiClient.$makeCaller(
+      this.$metadata.methods.setPassword,
+      (c, currentPassword: string | null, newPassword: string | null, confirmNewPassword: string | null) => c.setPassword(this.$primaryKey, currentPassword, newPassword, confirmNewPassword),
+      () => ({currentPassword: null as string | null, newPassword: null as string | null, confirmNewPassword: null as string | null, }),
+      (c, args) => c.setPassword(this.$primaryKey, args.currentPassword, args.newPassword, args.confirmNewPassword))
+    
+    Object.defineProperty(this, 'setPassword', {value: setPassword});
+    return setPassword
+  }
+  
+  constructor(initialData?: DeepPartial<$models.User> | null) {
+    super($metadata.User, new $apiClients.UserApiClient(), initialData)
+  }
+}
+defineProps(UserViewModel, $metadata.User)
+
+export class UserListViewModel extends ListViewModel<$models.User, $apiClients.UserApiClient, UserViewModel> {
+  static DataSources = $models.User.DataSources;
+  
+  constructor() {
+    super($metadata.User, new $apiClients.UserApiClient())
+  }
+}
+
+
+export interface UserRoleViewModel extends $models.UserRole {
+  id: string | null;
+  get user(): UserViewModel | null;
+  set user(value: UserViewModel | $models.User | null);
+  get role(): RoleViewModel | null;
+  set role(value: RoleViewModel | $models.Role | null);
+  userId: string | null;
+  roleId: string | null;
+}
+export class UserRoleViewModel extends ViewModel<$models.UserRole, $apiClients.UserRoleApiClient, string> implements $models.UserRole  {
+  static DataSources = $models.UserRole.DataSources;
+  
+  constructor(initialData?: DeepPartial<$models.UserRole> | null) {
+    super($metadata.UserRole, new $apiClients.UserRoleApiClient(), initialData)
+  }
+}
+defineProps(UserRoleViewModel, $metadata.UserRole)
+
+export class UserRoleListViewModel extends ListViewModel<$models.UserRole, $apiClients.UserRoleApiClient, UserRoleViewModel> {
+  static DataSources = $models.UserRole.DataSources;
+  
+  constructor() {
+    super($metadata.UserRole, new $apiClients.UserRoleApiClient())
   }
 }
 
@@ -67,10 +178,14 @@ export class WorkoutServiceViewModel extends ServiceViewModel<typeof $metadata.W
 
 
 const viewModelTypeLookup = ViewModel.typeLookup = {
-  Equipment: EquipmentViewModel,
+  Role: RoleViewModel,
+  User: UserViewModel,
+  UserRole: UserRoleViewModel,
 }
 const listViewModelTypeLookup = ListViewModel.typeLookup = {
-  Equipment: EquipmentListViewModel,
+  Role: RoleListViewModel,
+  User: UserListViewModel,
+  UserRole: UserRoleListViewModel,
 }
 const serviceViewModelTypeLookup = ServiceViewModel.typeLookup = {
   SecurityService: SecurityServiceViewModel,

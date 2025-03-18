@@ -1,24 +1,19 @@
-using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-using Azure.Core;
-using Azure.Identity;
 using IntelliTect.Coalesce;
-using Microsoft.ApplicationInsights.DependencyCollector;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Logging.Console;
-using Microsoft.OpenApi.Models;
 using Move.Engine.Data;
 using Move.Engine.Data.Auth;
 using Move.Engine.Data.Communication;
 using Move.Engine.Data.Services;
 using Move.Engine.Web;
-using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -35,24 +30,12 @@ builder.Logging
 builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile("appsettings.localhost.json", optional: true, reloadOnChange: true)
-    .AddUserSecrets<Program>()
     .AddEnvironmentVariables();
 
 #region Configure Services
 
 var services = builder.Services;
 
-services.AddApplicationInsightsTelemetry(b =>
-{
-    b.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"];
-});
-services.AddSingleton<ITelemetryInitializer, AppInsightsTelemetryEnricher>();
-services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) =>
-{
-    module.EnableSqlCommandTextInstrumentation = true;
-});
-// App insights filters all logs to Warning by default. We want to include our own logging.
-builder.Logging.AddFilter<ApplicationInsightsLoggerProvider>("Move.Engine", LogLevel.Information);
 
 
 services.AddDbContext<AppDbContext>(options => options
@@ -78,21 +61,22 @@ services
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
 
-services.AddSingleton<TokenCredential, DefaultAzureCredential>();
-services.Configure<AzureEmailOptions>(builder.Configuration.GetSection("Communication:Azure"));
-services.AddTransient<IEmailService, AzureEmailService>();
-services.AddScoped<WorkoutService>();
+builder.ConfigureAuthentication();
 
-
-services.AddSwaggerGen(c =>
-{
-    c.AddCoalesce();
-    c.SwaggerDoc("current", new OpenApiInfo { Title = "Current API", Version = "current" });
-});
+services.AddTransient<IEmailService, NoOpEmailService>();
 
 
 services.AddScoped<SecurityService>();
 
+// Register IUrlHelper to allow for invite link generation.
+services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+services.AddScoped<IUrlHelper>(x =>
+{
+    var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
+    var factory = x.GetRequiredService<IUrlHelperFactory>();
+    return factory.GetUrlHelper(actionContext!);
+});
+services.AddScoped<WorkoutService>();
 
 #endregion
 
@@ -102,31 +86,15 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    //app.UseDeveloperExceptionPage();
+    app.UseDeveloperExceptionPage();
 
-    //app.UseViteDevelopmentServer(c =>
-    //{
-    //    c.DevServerPort = 11696;
-    //});
-}
-{
+    app.UseViteDevelopmentServer(c =>
+    {
+        c.DevServerPort = 13942;
+    });
+
     app.MapCoalesceSecurityOverview("coalesce-security");
 
-    // TODO: Dummy authentication for initial development.
-    // Replace this with a proper authentication scheme like
-    // Windows Authentication, or an OIDC provider, or something else.
-    // If you wanted to use ASP.NET Core Identity, you're recommended
-    // to keep the "--Identity" parameter to the Coalesce template enabled.
-    app.Use(async (context, next) =>
-    {
-        Claim[] claims = [new Claim(ClaimTypes.Name, "developmentuser")];
-
-        var identity = new ClaimsIdentity(claims, "dummy-auth");
-        context.User = new ClaimsPrincipal(identity);
-
-        await next.Invoke();
-    });
-    // End Dummy Authentication.
 }
 
 app.UseAuthentication();
@@ -154,8 +122,6 @@ app.Use(async (context, next) =>
     await next();
 });
 
-app.MapSwagger();
-app.MapScalarApiReference(c => c.OpenApiRoutePattern = "/swagger/{documentName}/swagger.json");
 
 app.MapRazorPages();
 app.MapDefaultControllerRoute();

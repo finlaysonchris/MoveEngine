@@ -13,13 +13,6 @@
                 prepend-icon="fa fa-lock-open"
               >
               </v-list-item>
-              <v-list-item
-                title="Open API"
-                subtitle="View OpenAPI documentation for the application."
-                to="/openapi"
-                prepend-icon="fa fa-code"
-              >
-              </v-list-item>
             </v-list>
           </v-card-text>
         </v-card>
@@ -66,7 +59,7 @@
 import $metadata from "@/metadata.g";
 import type { Domain, ModelType } from "coalesce-vue";
 
-const excludedTypes: Array<keyof typeof $metadata.types> = [];
+const excludedTypes: Array<keyof typeof $metadata.types> = ["UserRole"];
 
 const adminTypes = Object.values(($metadata as Domain).types).filter(
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

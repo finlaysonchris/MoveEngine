@@ -5,6 +5,9 @@ namespace Move.Engine.Data.Models;
 
 public abstract class TrackingBase
 {
+    [ForeignKey("ModifiedById")]
+    [Read, Display(Order = 1000010)]
+    public User? ModifiedBy { get; set; }
 
     [Read]
     public string? ModifiedById { get; set; }
@@ -12,6 +15,9 @@ public abstract class TrackingBase
     [Read, Display(Order = 1000012)]
     public DateTimeOffset ModifiedOn { get; set; }
 
+    [ForeignKey("CreatedById")]
+    [Read, Display(Order = 1000000)]
+    public User? CreatedBy { get; set; }
 
     [Read]
     public string? CreatedById { get; set; }

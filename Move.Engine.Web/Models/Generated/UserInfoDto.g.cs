@@ -14,6 +14,10 @@ namespace Move.Engine.Web.Models
 
         private string _Id;
         private string _UserName;
+        private string _Email;
+        private string _FullName;
+        private System.Collections.Generic.ICollection<string> _Roles;
+        private System.Collections.Generic.ICollection<string> _Permissions;
 
         public string Id
         {
@@ -24,6 +28,26 @@ namespace Move.Engine.Web.Models
         {
             get => _UserName;
             set { _UserName = value; Changed(nameof(UserName)); }
+        }
+        public string Email
+        {
+            get => _Email;
+            set { _Email = value; Changed(nameof(Email)); }
+        }
+        public string FullName
+        {
+            get => _FullName;
+            set { _FullName = value; Changed(nameof(FullName)); }
+        }
+        public System.Collections.Generic.ICollection<string> Roles
+        {
+            get => _Roles;
+            set { _Roles = value; Changed(nameof(Roles)); }
+        }
+        public System.Collections.Generic.ICollection<string> Permissions
+        {
+            get => _Permissions;
+            set { _Permissions = value; Changed(nameof(Permissions)); }
         }
 
         /// <summary>
@@ -37,6 +61,10 @@ namespace Move.Engine.Web.Models
 
             if (ShouldMapTo(nameof(Id))) entity.Id = Id;
             if (ShouldMapTo(nameof(UserName))) entity.UserName = UserName;
+            if (ShouldMapTo(nameof(Email))) entity.Email = Email;
+            if (ShouldMapTo(nameof(FullName))) entity.FullName = FullName;
+            if (ShouldMapTo(nameof(Roles))) entity.Roles = Roles;
+            if (ShouldMapTo(nameof(Permissions))) entity.Permissions = Permissions;
         }
 
         /// <summary>
@@ -44,8 +72,20 @@ namespace Move.Engine.Web.Models
         /// </summary>
         public override Move.Engine.Data.Auth.UserInfo MapToNew(IMappingContext context)
         {
-            var entity = new Move.Engine.Data.Auth.UserInfo();
-            MapTo(entity, context);
+            var includes = context.Includes;
+
+            var entity = new Move.Engine.Data.Auth.UserInfo()
+            {
+                Roles = Roles,
+                Permissions = Permissions,
+            };
+
+            if (OnUpdate(entity, context)) return entity;
+            if (ShouldMapTo(nameof(Id))) entity.Id = Id;
+            if (ShouldMapTo(nameof(UserName))) entity.UserName = UserName;
+            if (ShouldMapTo(nameof(Email))) entity.Email = Email;
+            if (ShouldMapTo(nameof(FullName))) entity.FullName = FullName;
+
             return entity;
         }
     }
@@ -56,6 +96,10 @@ namespace Move.Engine.Web.Models
 
         public string Id { get; set; }
         public string UserName { get; set; }
+        public string Email { get; set; }
+        public string FullName { get; set; }
+        public System.Collections.Generic.ICollection<string> Roles { get; set; }
+        public System.Collections.Generic.ICollection<string> Permissions { get; set; }
 
         /// <summary>
         /// Map from the domain object to the properties of the current DTO instance.
@@ -67,6 +111,10 @@ namespace Move.Engine.Web.Models
 
             this.Id = obj.Id;
             this.UserName = obj.UserName;
+            this.Email = obj.Email;
+            this.FullName = obj.FullName;
+            this.Roles = obj.Roles;
+            this.Permissions = obj.Permissions;
         }
     }
 }
