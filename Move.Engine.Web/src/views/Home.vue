@@ -141,7 +141,10 @@ const saveWorkout = async () => {
 
 const handleSave = async () => {
   const workoutListViewModel = new UserWorkoutListViewModel();
-  await workoutListViewModel.saveWorkout("the name", "the workout");
+  await workoutListViewModel.saveWorkout(
+    workoutName.value,
+    generatedWorkout.value,
+  );
   alert("hello world");
   showDialog.value = false;
 };
