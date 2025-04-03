@@ -40,11 +40,34 @@
     </span>
     <div v-html="renderedMarkdown"></div>
     <v-btn @click="submitRequest">Generate Workout</v-btn>
+    <v-btn @click="saveWorkout">Save Workout</v-btn>
+
+    <!-- Modal Dialog -->
+    <v-dialog v-model="showDialog" max-width="500">
+      <v-card>
+        <v-card-title>Save Workout</v-card-title>
+        <v-card-text>
+          <v-text-field
+            v-model="workoutName"
+            label="Workout Name"
+          ></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="showDialog = false">Cancel</v-btn>
+          <v-btn @click="handleSave">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { WorkoutServiceViewModel } from "@/viewmodels.g";
+import { ref, computed } from "vue";
+import {
+  UserWorkoutListViewModel,
+  UserWorkoutViewModel,
+  WorkoutServiceViewModel,
+} from "@/viewmodels.g";
 import MarkdownIt from "markdown-it";
 
 const workoutStyles = [
@@ -80,6 +103,9 @@ const length = ref<number | null>(null);
 const selectedStyles = ref<string[] | null>(null);
 const selectedEquipment = ref<string[]>([]);
 const showRequest = ref(false);
+const showDialog = ref(false);
+const workoutName = ref("");
+
 const editableRequest = computed({
   get: () => {
     let request = "Generate a workout.";
@@ -95,7 +121,7 @@ const editableRequest = computed({
     return `${request} Don't repeat any exercises.`;
   },
   set(value) {
-    editableRequest.value = value;
+    // This setter can be customized if needed.
   },
 });
 
@@ -107,6 +133,17 @@ const submitRequest = async () => {
   generatedWorkout.value = await workoutService.generateWorkout(
     editableRequest.value,
   );
+};
+
+const saveWorkout = async () => {
+  showDialog.value = true;
+};
+
+const handleSave = async () => {
+  const workoutListViewModel = new UserWorkoutListViewModel();
+  await workoutListViewModel.saveWorkout("the name", "the workout");
+  alert("hello world");
+  showDialog.value = false;
 };
 
 useTitle("Workout Generator");

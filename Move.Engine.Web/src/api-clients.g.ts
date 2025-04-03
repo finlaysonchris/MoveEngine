@@ -55,6 +55,20 @@ export class UserRoleApiClient extends ModelApiClient<$models.UserRole> {
 }
 
 
+export class UserWorkoutApiClient extends ModelApiClient<$models.UserWorkout> {
+  constructor() { super($metadata.UserWorkout) }
+  public saveWorkout(name: string | null, workout: string | null, $config?: AxiosRequestConfig): AxiosPromise<ItemResult<void>> {
+    const $method = this.$metadata.methods.saveWorkout
+    const $params =  {
+      name,
+      workout,
+    }
+    return this.$invoke($method, $params, $config)
+  }
+  
+}
+
+
 export class SecurityServiceApiClient extends ServiceApiClient<typeof $metadata.SecurityService> {
   constructor() { super($metadata.SecurityService) }
   public whoAmI($config?: AxiosRequestConfig): AxiosPromise<ItemResult<$models.UserInfo>> {

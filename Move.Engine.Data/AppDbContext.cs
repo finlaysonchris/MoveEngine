@@ -1,12 +1,6 @@
-using Move.Engine.Data.Coalesce;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
-using System.Linq.Expressions;
-using System.Security.Cryptography;
 
 namespace Move.Engine.Data;
 
@@ -26,15 +20,13 @@ public class AppDbContext
 {
     public bool SuppressAudit { get; set; } = false;
 
-
     public AppDbContext() { }
 
     public AppDbContext(DbContextOptions options) : base(options) { }
 
-
-
     public DbSet<UserPhoto> UserPhotos => Set<UserPhoto>();
 
+    public DbSet<UserWorkout> UserWorkouts => Set<UserWorkout>();
 
     [InternalUse]
     public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();

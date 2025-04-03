@@ -120,6 +120,40 @@ export namespace UserRole {
 }
 
 
+export interface UserWorkout extends Model<typeof metadata.UserWorkout> {
+  userWorkoutId: number | null
+  userId: string | null
+  user: User | null
+  name: string | null
+  workout: string | null
+  modifiedBy: User | null
+  modifiedById: string | null
+  modifiedOn: Date | null
+  createdBy: User | null
+  createdById: string | null
+  createdOn: Date | null
+}
+export class UserWorkout {
+  
+  /** Mutates the input object and its descendents into a valid UserWorkout implementation. */
+  static convert(data?: Partial<UserWorkout>): UserWorkout {
+    return convertToModel(data || {}, metadata.UserWorkout) 
+  }
+  
+  /** Maps the input object and its descendents to a new, valid UserWorkout implementation. */
+  static map(data?: Partial<UserWorkout>): UserWorkout {
+    return mapToModel(data || {}, metadata.UserWorkout) 
+  }
+  
+  static [Symbol.hasInstance](x: any) { return x?.$metadata === metadata.UserWorkout; }
+  
+  /** Instantiate a new UserWorkout, optionally basing it on the given data. */
+  constructor(data?: Partial<UserWorkout> | {[k: string]: any}) {
+    Object.assign(this, UserWorkout.map(data || {}));
+  }
+}
+
+
 export interface UserInfo extends Model<typeof metadata.UserInfo> {
   id: string | null
   userName: string | null
@@ -158,5 +192,6 @@ declare module "coalesce-vue/lib/model" {
     User: User
     UserInfo: UserInfo
     UserRole: UserRole
+    UserWorkout: UserWorkout
   }
 }

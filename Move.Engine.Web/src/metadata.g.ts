@@ -413,6 +413,160 @@ export const UserRole = domain.types.UserRole = {
     },
   },
 }
+export const UserWorkout = domain.types.UserWorkout = {
+  name: "UserWorkout" as const,
+  displayName: "User Workout",
+  get displayProp() { return this.props.name }, 
+  type: "model",
+  controllerRoute: "UserWorkout",
+  get keyProp() { return this.props.userWorkoutId }, 
+  behaviorFlags: 7 as BehaviorFlags,
+  props: {
+    userWorkoutId: {
+      name: "userWorkoutId",
+      displayName: "User Workout Id",
+      type: "number",
+      role: "primaryKey",
+      hidden: 3 as HiddenAreas,
+    },
+    userId: {
+      name: "userId",
+      displayName: "User Id",
+      type: "string",
+      role: "foreignKey",
+      get principalKey() { return (domain.types.User as ModelType & { name: "User" }).props.id as PrimaryKeyProperty },
+      get principalType() { return (domain.types.User as ModelType & { name: "User" }) },
+      get navigationProp() { return (domain.types.UserWorkout as ModelType & { name: "UserWorkout" }).props.user as ModelReferenceNavigationProperty },
+      hidden: 3 as HiddenAreas,
+      rules: {
+        required: val => (val != null && val !== '') || "User is required.",
+      }
+    },
+    user: {
+      name: "user",
+      displayName: "User",
+      type: "model",
+      get typeDef() { return (domain.types.User as ModelType & { name: "User" }) },
+      role: "referenceNavigation",
+      get foreignKey() { return (domain.types.UserWorkout as ModelType & { name: "UserWorkout" }).props.userId as ForeignKeyProperty },
+      get principalKey() { return (domain.types.User as ModelType & { name: "User" }).props.id as PrimaryKeyProperty },
+      dontSerialize: true,
+    },
+    name: {
+      name: "name",
+      displayName: "Name",
+      type: "string",
+      role: "value",
+      rules: {
+        required: val => (val != null && val !== '') || "Name is required.",
+      }
+    },
+    workout: {
+      name: "workout",
+      displayName: "Workout",
+      type: "string",
+      role: "value",
+      rules: {
+        required: val => (val != null && val !== '') || "Workout is required.",
+      }
+    },
+    modifiedById: {
+      name: "modifiedById",
+      displayName: "Modified By Id",
+      type: "string",
+      role: "foreignKey",
+      get principalKey() { return (domain.types.User as ModelType & { name: "User" }).props.id as PrimaryKeyProperty },
+      get principalType() { return (domain.types.User as ModelType & { name: "User" }) },
+      get navigationProp() { return (domain.types.UserWorkout as ModelType & { name: "UserWorkout" }).props.modifiedBy as ModelReferenceNavigationProperty },
+      hidden: 3 as HiddenAreas,
+      dontSerialize: true,
+    },
+    createdById: {
+      name: "createdById",
+      displayName: "Created By Id",
+      type: "string",
+      role: "foreignKey",
+      get principalKey() { return (domain.types.User as ModelType & { name: "User" }).props.id as PrimaryKeyProperty },
+      get principalType() { return (domain.types.User as ModelType & { name: "User" }) },
+      get navigationProp() { return (domain.types.UserWorkout as ModelType & { name: "UserWorkout" }).props.createdBy as ModelReferenceNavigationProperty },
+      hidden: 3 as HiddenAreas,
+      dontSerialize: true,
+    },
+    createdBy: {
+      name: "createdBy",
+      displayName: "Created By",
+      type: "model",
+      get typeDef() { return (domain.types.User as ModelType & { name: "User" }) },
+      role: "referenceNavigation",
+      get foreignKey() { return (domain.types.UserWorkout as ModelType & { name: "UserWorkout" }).props.createdById as ForeignKeyProperty },
+      get principalKey() { return (domain.types.User as ModelType & { name: "User" }).props.id as PrimaryKeyProperty },
+      dontSerialize: true,
+    },
+    createdOn: {
+      name: "createdOn",
+      displayName: "Created On",
+      type: "date",
+      dateKind: "datetime",
+      role: "value",
+      dontSerialize: true,
+    },
+    modifiedBy: {
+      name: "modifiedBy",
+      displayName: "Modified By",
+      type: "model",
+      get typeDef() { return (domain.types.User as ModelType & { name: "User" }) },
+      role: "referenceNavigation",
+      get foreignKey() { return (domain.types.UserWorkout as ModelType & { name: "UserWorkout" }).props.modifiedById as ForeignKeyProperty },
+      get principalKey() { return (domain.types.User as ModelType & { name: "User" }).props.id as PrimaryKeyProperty },
+      dontSerialize: true,
+    },
+    modifiedOn: {
+      name: "modifiedOn",
+      displayName: "Modified On",
+      type: "date",
+      dateKind: "datetime",
+      role: "value",
+      dontSerialize: true,
+    },
+  },
+  methods: {
+    saveWorkout: {
+      name: "saveWorkout",
+      displayName: "Save Workout",
+      transportType: "item",
+      httpMethod: "POST",
+      isStatic: true,
+      params: {
+        name: {
+          name: "name",
+          displayName: "Name",
+          type: "string",
+          role: "value",
+          rules: {
+            required: val => (val != null && val !== '') || "Name is required.",
+          }
+        },
+        workout: {
+          name: "workout",
+          displayName: "Workout",
+          type: "string",
+          role: "value",
+          rules: {
+            required: val => (val != null && val !== '') || "Workout is required.",
+          }
+        },
+      },
+      return: {
+        name: "$return",
+        displayName: "Result",
+        type: "void",
+        role: "value",
+      },
+    },
+  },
+  dataSources: {
+  },
+}
 export const UserInfo = domain.types.UserInfo = {
   name: "UserInfo" as const,
   displayName: "User Info",
@@ -532,6 +686,7 @@ interface AppDomain extends Domain {
     User: typeof User
     UserInfo: typeof UserInfo
     UserRole: typeof UserRole
+    UserWorkout: typeof UserWorkout
   }
   services: {
     SecurityService: typeof SecurityService

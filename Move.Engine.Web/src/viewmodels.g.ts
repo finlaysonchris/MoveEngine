@@ -139,6 +139,49 @@ export class UserRoleListViewModel extends ListViewModel<$models.UserRole, $apiC
 }
 
 
+export interface UserWorkoutViewModel extends $models.UserWorkout {
+  userWorkoutId: number | null;
+  userId: string | null;
+  get user(): UserViewModel | null;
+  set user(value: UserViewModel | $models.User | null);
+  name: string | null;
+  workout: string | null;
+  get modifiedBy(): UserViewModel | null;
+  set modifiedBy(value: UserViewModel | $models.User | null);
+  modifiedById: string | null;
+  modifiedOn: Date | null;
+  get createdBy(): UserViewModel | null;
+  set createdBy(value: UserViewModel | $models.User | null);
+  createdById: string | null;
+  createdOn: Date | null;
+}
+export class UserWorkoutViewModel extends ViewModel<$models.UserWorkout, $apiClients.UserWorkoutApiClient, number> implements $models.UserWorkout  {
+  
+  constructor(initialData?: DeepPartial<$models.UserWorkout> | null) {
+    super($metadata.UserWorkout, new $apiClients.UserWorkoutApiClient(), initialData)
+  }
+}
+defineProps(UserWorkoutViewModel, $metadata.UserWorkout)
+
+export class UserWorkoutListViewModel extends ListViewModel<$models.UserWorkout, $apiClients.UserWorkoutApiClient, UserWorkoutViewModel> {
+  
+  public get saveWorkout() {
+    const saveWorkout = this.$apiClient.$makeCaller(
+      this.$metadata.methods.saveWorkout,
+      (c, name: string | null, workout: string | null) => c.saveWorkout(name, workout),
+      () => ({name: null as string | null, workout: null as string | null, }),
+      (c, args) => c.saveWorkout(args.name, args.workout))
+    
+    Object.defineProperty(this, 'saveWorkout', {value: saveWorkout});
+    return saveWorkout
+  }
+  
+  constructor() {
+    super($metadata.UserWorkout, new $apiClients.UserWorkoutApiClient())
+  }
+}
+
+
 export class SecurityServiceViewModel extends ServiceViewModel<typeof $metadata.SecurityService, $apiClients.SecurityServiceApiClient> {
   
   public get whoAmI() {
@@ -181,11 +224,13 @@ const viewModelTypeLookup = ViewModel.typeLookup = {
   Role: RoleViewModel,
   User: UserViewModel,
   UserRole: UserRoleViewModel,
+  UserWorkout: UserWorkoutViewModel,
 }
 const listViewModelTypeLookup = ListViewModel.typeLookup = {
   Role: RoleListViewModel,
   User: UserListViewModel,
   UserRole: UserRoleListViewModel,
+  UserWorkout: UserWorkoutListViewModel,
 }
 const serviceViewModelTypeLookup = ServiceViewModel.typeLookup = {
   SecurityService: SecurityServiceViewModel,
